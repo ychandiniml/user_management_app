@@ -1,35 +1,15 @@
-import React, { useState } from 'react';
-import UserList from './components/UserList';
-import UserDetails from './components/UserDetails';
-import UserForm from './components/AddUserForm';
+import React from 'react';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import Home from './pages/Home';
 
-const App = () => {
-  const [users, setUsers] = useState([]);
-  const [selectedUser, setSelectedUser] = useState(null);
-
-  const handleAddUser = (user) => {
-    setUsers([...users, user]);
-  };
-
-  const handleRemoveUser = (user) => {
-    setUsers(users.filter(u => u !== user));
-  };
-
-  const handleViewDetails = (user) => {
-    setSelectedUser(user);
-  };
-
-  const handleCloseDetails = () => {
-    setSelectedUser(null);
-  };
-
+function App() {
   return (
-    <div className="container mx-auto p-4">
-      <UserForm onAddUser={handleAddUser} />
-      <UserList users={users} onViewDetails={handleViewDetails} onRemoveUser={handleRemoveUser} />
-      {selectedUser && <UserDetails user={selectedUser} onClose={handleCloseDetails} />}
-    </div>
+    <Router>
+      <Routes>
+        <Route path="/" element={<Home />} />
+      </Routes>
+    </Router>
   );
-};
+}
 
 export default App;

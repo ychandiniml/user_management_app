@@ -1,36 +1,92 @@
-import React, { useState } from 'react';
+import React from 'react';
+import { Formik, Field, Form, ErrorMessage } from 'formik';
+import * as Yup from 'yup';
 
-const UserForm = ({ onAddUser }) => {
-  const [username, setUsername] = useState('');
-  const [email, setEmail] = useState('');
-  const [description, setDescription] = useState('');
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    onAddUser({ username, email, description, role: 'User', registrationDate: new Date().toLocaleDateString() });
-    setUsername('');
-    setEmail('');
-    setDescription('');
-  };
+const AddUserForm = ({ onAddUser }) => {
+  const validationSchema = Yup.object({
+    username: Yup.string()
+      .min(2, 'Too Short!')
+      .max(50, 'Too Long!')
+      .required('Required'),
+    email: Yup.string()
+      .email('Invalid email')
+      .required('Required'),
+    description: Yup.string()
+      .required('Required'),
+  });
 
   return (
-    <form onSubmit={handleSubmit} className="p-4">
-      <h2 className="text-xl font-bold mb-4">Add User</h2>
-      <div className="mb-4">
-        <label className="block text-gray-700">Username</label>
-        <input type="text" value={username} onChange={(e) => setUsername(e.target.value)} className="w-full px-3 py-2 border rounded" required />
-      </div>
-      <div className="mb-4">
-        <label className="block text-gray-700">Email</label>
-        <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} className="w-full px-3 py-2 border rounded" required />
-      </div>
-      <div className="mb-4">
-        <label className="block text-gray-700">Description</label>
-        <textarea value={description} onChange={(e) => setDescription(e.target.value)} className="w-full px-3 py-2 border rounded" required></textarea>
-      </div>
-      <button type="submit" className="bg-green-500 text-white px-4 py-2 rounded">Add User</button>
-    </form>
+    <Formik
+      initialValues={{
+        username: '',
+        email: '',
+        description: '',
+        role: '',
+        registeredAt: new Date().toISOString().split('T')[0]
+      }}
+      validationSchema={validationSchema}
+      onSubmit={(values, { resetForm }) => {
+        onAddUser(values);
+        resetForm();
+      }}
+    >
+      {({ isSubmitting }) => (
+        <Form className="bg-white p-4 rounded shadow-lg mb-4">
+          <div className="mb-4">
+            <label className="block text-sm font-bold mb-2">Username</label>
+            <Field
+              type="text"
+              name="username"
+              className="w-full p-2 border border-gray-300 rounded"
+            />
+            <ErrorMessage name="username" component="div" className="text-red-500 text-xs" />
+          </div>
+
+          <div className="mb-4">
+            <label className="block text-sm font-bold mb-2">Email</label>
+            <Field
+              type="email"
+              name="email"
+              className="w-full p-2 border border-gray-300 rounded"
+            />
+            <ErrorMessage name="email" component="div" className="text-red-500 text-xs" />
+          </div>
+
+          <div className="mb-4">
+            <label className="block text-sm font-bold mb-2">Description</label>
+            <Field
+              type="text"
+              name="description"
+              className="w-full p-2 border border-gray-300 rounded"
+            />
+            <ErrorMessage name="description" component="div" className="text-red-500 text-xs" />
+          </div>
+
+          <div className="mb-4">
+            <label className="block text-sm font-bold mb-2">Role</label>
+            <Field
+              type="text"
+              name="role"
+              className="w-full p-2 border border-gray-300 rounded"
+            />
+          </div>
+
+          <div className="mb-4">
+            <label className="block text-sm font-bold mb-2">Registration Date</label>
+            <Field
+              type="date"
+              name="registeredAt"
+              className="w-full p-2 border border-gray-300 rounded"
+            />
+          </div>
+
+          <button type="submit" className="bg-blue-500 text-white px-3 py-2 text-xs font-medium rounded hover:bg-blue-800" disabled={isSubmitting}>
+            Add User
+          </button>
+        </Form>
+      )}
+    </Formik>
   );
 };
 
-export default UserForm;
+export default AddUserForm;
