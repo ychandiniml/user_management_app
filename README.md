@@ -1,4 +1,4 @@
-# User Management Application Full Stack Challenge
+# User Management Application 
 
 
 <img width="1512" alt="image" src="https://github.com/user-attachments/assets/8173ebcb-05a4-47ae-989b-05fcfc36000f">
